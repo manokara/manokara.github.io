@@ -1,3 +1,5 @@
+title = "manokara's den"
+description = "Welcome to my underground lair"
 base_url = "https://manokara.github.io"
 theme = "zerm"
 compile_sass = true
@@ -40,7 +42,7 @@ show_menu_items = 2
 full_width = false
 
 # center theme with default width.
-center = false
+center = true
 
 # set a custom favicon. Must be placed in root of static/ directory...
 # favicon = ""
