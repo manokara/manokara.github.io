@@ -52,7 +52,7 @@ center = true
 # og_preview_img = ""
 
 # Copyright notice if desired. Defaults to
-copyright = "© 2021 manokara"
+copyright = "© 2022 manokara"
 
 # What is displayed in the top left corner of the website. Default is zerm.
 logo_text = "manokara's den"
