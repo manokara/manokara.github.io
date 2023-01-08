@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <title>How to fix ZeroTier not working on Windows 8.1 - manokara&#x27;s den</title>
+    
+    
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <meta name="description" content="Welcome to my underground lair"/>
+
+    <meta property="og:title" content="How to fix ZeroTier not working on Windows 8.1&nbsp;- manokara&#x27;s den
+" />
+    <meta property="og:type" content="website"/>
+    <meta property="og:url" content="https:&#x2F;&#x2F;manokara.github.io&#x2F;0002-zerotier-windows81&#x2F;"/>
+    <meta property="og:description" content="All in 8 easy steps! If you can&#x27;t access anyone and there are no virtual network tunnel adapters, this post is for you."/>
+    <link rel="preload" href="/assets/fonts/FiraCode-Regular.woff" as="font" type="font/woff" crossorigin>
+    <link rel="preload" href="/assets/fonts/FiraCode-Bold.woff" as="font" type="font/woff" crossorigin>
+
+    <link rel="stylesheet" href="https:&#x2F;&#x2F;manokara.github.io&#x2F;style.css">
+    <link rel="stylesheet" href="https:&#x2F;&#x2F;manokara.github.io&#x2F;color&#x2F;red.css">
+</head>
+    <body>
+        <div class="container center">
+<header class="header">
+    <div class="header__inner">
+        <div class="header__logo">
+            <a href="&#x2F;">
+    <div class="logo">
+        manokara&#x27;s den
+    </div>
+</a>
+        </div>
+        <div class="menu-trigger">menu</div>
+    </div>
+    </header>
+<div class="content"><div class="post">
+        <h1 class="post-title">
+            <a href="https:&#x2F;&#x2F;manokara.github.io&#x2F;0002-zerotier-windows81&#x2F;">How to fix ZeroTier not working on Windows 8.1</a>
+        </h1>
+        
+    <div class="post-meta">
+        <span class="post-date">2022.12.16
+                </span>
+
+        <span class="post-author"></span>
+
+        
+
+    
+    :: {<a href="https:&#x2F;&#x2F;manokara.github.io&#x2F;categories&#x2F;tech-support&#x2F;">tech support</a>} 
+
+            
+    ::
+    #<a href="https:&#x2F;&#x2F;manokara.github.io&#x2F;tags&#x2F;windows&#x2F;">windows</a>
+        
+    
+            
+        
+    </div>
+
+
+
+        
+
+        <div class="post-content">
+            <p>Today I wanted to install ZeroTier on a machine at work, which runs Windows 8.1, so I could securely copy some files over the weekend from home. So, I went to ZeroTier's website and downloaded the latest version, 1.10.2, as one would, and installed it. Installation went on without a hitch. Or so I thought...</p>
+<p>I join the network, approve the connection request on the network management panel in ZeroTier Central, get an IP and try to ping it. Destination unreachable. Weird. Type <code>zerotier-cli listnetworks</code> on the Windows machine and get nothing. <em>What?!</em> Nonsense, I approved it and it was showing ONLINE. So I go to Network Adapters panel and there are only the ethernet adapters there. Where are ZeroTier's virtual ports? After a while, leaving and joining the network again was giving timeouts. Come to think of it, I didn't get a new network popup when I joined the network. So off to the search engine I go...</p>
+<p>After searching for a while, I found <a href="https://discuss.zerotier.com/t/msi-doesnt-install-network-adapter-drivers-how-can-i-manually-install-it/8884/4">this post</a> on ZeroTier's Discourse forums. Apparently the installation of ZeroTier's virtual adapters is failing silently because the 1.10.x installer has a newer sigining key for the drivers, I think.</p>
+<h2 id="the-fix">The fix</h2>
+<ul>
+<li>Stop the ZeroTierOne service and uninstall ZeroTier first if you haven't.
+<ul>
+<li>Also delete the directories at <code>C:\ProgramData\ZeroTier</code> and <code>C:\Users\&lt;your user&gt;\AppData\Local\ZeroTier</code> to be extra sure.</li>
+</ul>
+</li>
+<li>Download version 1.6.6 <a href="https://download.zerotier.com/RELEASES/1.6.6/dist/">from here</a>.
+<ul>
+<li>Install it, but don't run it yet.</li>
+<li>Stop the ZeroTierOne service.</li>
+</ul>
+</li>
+<li>Download the latest version and install it.</li>
+<li>Delete the old approvals from ZeroTier Central.</li>
+<li>Try joining the network now.</li>
+</ul>
+<p>After installing 1.6.6, you should see ZeroTier's virtual network adapters in the Network Adapters list. If they're there, all is well. Joining the network should now show a popup asking if you want to enable sharing and such, and you could try pinging other (ping-able) nodes on the network and check if everything's alright. Otherwise, I'm afraid you're on your own - but please do get in touch if you managed to solve it another way so I can add it here.</p>
+<blockquote>
+<p><strong>Forum post OP</strong>: [...] I will not be able to join new networks directly through the 1.10.1 version. I’ll only be able to use networks that have already been created through 1.6.6.</p>
+</blockquote>
+<p>While I did join a network right after installing 1.6.6, I could join another one just fine after updating to 1.10.2 and was able to connect to other nodes in the network. I'm not sure if that was fixed in 1.10.2 or OP didn't check if they could.</p>
+<p>I think that's it. See ya! o/</p>
+
+        </div>
+        
+    
+</div></div>
+            
+    <div class="pagination">
+        <div class="pagination__buttons">
+            </div>
+    </div>
+<footer class="footer">
+                    <div class="footer__inner"><div class="copyright copyright--user">© 2022 manokara</div>
+    <script type="text/javascript" src="https:&#x2F;&#x2F;manokara.github.io&#x2F;assets&#x2F;js&#x2F;main.js"></script>
+</div>
+                    
+
+                </footer></div>
+    </body>
+</html>

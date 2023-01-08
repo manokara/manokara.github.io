@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+	<title>manokara&#x27;s den - tech support</title>
+	<subtitle>Welcome to my underground lair</subtitle>
+	<link href="https://manokara.github.io/categories/tech-support/atom.xml" rel="self" type="application/atom+xml"/>
+  <link href="https://manokara.github.io"/>
+	<generator uri="https://www.getzola.org/">Zola</generator>
+	<updated>2023-01-07T00:00:00+00:00</updated>
+	<id>https://manokara.github.io/categories/tech-support/atom.xml</id>
+	<entry xml:lang="en">
+		<title>How to fix ZeroTier not working on Windows 8.1</title>
+		<published>2022-12-16T00:00:00+00:00</published>
+		<updated>2022-12-16T00:00:00+00:00</updated>
+		<link href="https://manokara.github.io/0002-zerotier-windows81/" type="text/html"/>
+		<id>https://manokara.github.io/0002-zerotier-windows81/</id>
+		<content type="html">&lt;p&gt;Today I wanted to install ZeroTier on a machine at work, which runs Windows 8.1, so I could securely copy some files over the weekend from home. So, I went to ZeroTier&#x27;s website and downloaded the latest version, 1.10.2, as one would, and installed it. Installation went on without a hitch. Or so I thought...&lt;&#x2F;p&gt;
+&lt;p&gt;I join the network, approve the connection request on the network management panel in ZeroTier Central, get an IP and try to ping it. Destination unreachable. Weird. Type &lt;code&gt;zerotier-cli listnetworks&lt;&#x2F;code&gt; on the Windows machine and get nothing. &lt;em&gt;What?!&lt;&#x2F;em&gt; Nonsense, I approved it and it was showing ONLINE. So I go to Network Adapters panel and there are only the ethernet adapters there. Where are ZeroTier&#x27;s virtual ports? After a while, leaving and joining the network again was giving timeouts. Come to think of it, I didn&#x27;t get a new network popup when I joined the network. So off to the search engine I go...&lt;&#x2F;p&gt;
+&lt;p&gt;After searching for a while, I found &lt;a href=&quot;https:&#x2F;&#x2F;discuss.zerotier.com&#x2F;t&#x2F;msi-doesnt-install-network-adapter-drivers-how-can-i-manually-install-it&#x2F;8884&#x2F;4&quot;&gt;this post&lt;&#x2F;a&gt; on ZeroTier&#x27;s Discourse forums. Apparently the installation of ZeroTier&#x27;s virtual adapters is failing silently because the 1.10.x installer has a newer sigining key for the drivers, I think.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;the-fix&quot;&gt;The fix&lt;&#x2F;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Stop the ZeroTierOne service and uninstall ZeroTier first if you haven&#x27;t.
+&lt;ul&gt;
+&lt;li&gt;Also delete the directories at &lt;code&gt;C:\ProgramData\ZeroTier&lt;&#x2F;code&gt; and &lt;code&gt;C:\Users\&amp;lt;your user&amp;gt;\AppData\Local\ZeroTier&lt;&#x2F;code&gt; to be extra sure.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;Download version 1.6.6 &lt;a href=&quot;https:&#x2F;&#x2F;download.zerotier.com&#x2F;RELEASES&#x2F;1.6.6&#x2F;dist&#x2F;&quot;&gt;from here&lt;&#x2F;a&gt;.
+&lt;ul&gt;
+&lt;li&gt;Install it, but don&#x27;t run it yet.&lt;&#x2F;li&gt;
+&lt;li&gt;Stop the ZeroTierOne service.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;Download the latest version and install it.&lt;&#x2F;li&gt;
+&lt;li&gt;Delete the old approvals from ZeroTier Central.&lt;&#x2F;li&gt;
+&lt;li&gt;Try joining the network now.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;After installing 1.6.6, you should see ZeroTier&#x27;s virtual network adapters in the Network Adapters list. If they&#x27;re there, all is well. Joining the network should now show a popup asking if you want to enable sharing and such, and you could try pinging other (ping-able) nodes on the network and check if everything&#x27;s alright. Otherwise, I&#x27;m afraid you&#x27;re on your own - but please do get in touch if you managed to solve it another way so I can add it here.&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Forum post OP&lt;&#x2F;strong&gt;: [...] I will not be able to join new networks directly through the 1.10.1 version. I’ll only be able to use networks that have already been created through 1.6.6.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;While I did join a network right after installing 1.6.6, I could join another one just fine after updating to 1.10.2 and was able to connect to other nodes in the network. I&#x27;m not sure if that was fixed in 1.10.2 or OP didn&#x27;t check if they could.&lt;&#x2F;p&gt;
+&lt;p&gt;I think that&#x27;s it. See ya! o&#x2F;&lt;&#x2F;p&gt;
+</content>
+	</entry>
+	<entry xml:lang="en">
+		<title>Builtin SD card readers (on Linux) are evil, I think</title>
+		<published>2022-12-01T00:00:00+00:00</published>
+		<updated>2023-01-07T00:00:00+00:00</updated>
+		<link href="https://manokara.github.io/0001-systemd-spike/" type="text/html"/>
+		<id>https://manokara.github.io/0001-systemd-spike/</id>
+		<content type="html">&lt;p&gt;I&#x27;ve been wondering what my first real blog post could ever be. Something technical, a rant, maybe both? I&#x27;ve had my GH pages blog up for a while with a Hello World, and yesterday after solving an issue I&#x27;ve been struggling with for a while on one of my Linux machines, decided it was the time to put some life into the den. This issue in particular is quite unintuitive if you don&#x27;t know what to look for, so I thought writing about it could help other people with the same problem.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;a-little-backstory&quot;&gt;A little backstory&lt;&#x2F;h2&gt;
+&lt;p&gt;My sister had an ASUS laptop gathering dust in a corner, because its keyboard was broken, among other things, but overall it was in very good condition, as well as having a pretty decent spec for its price tag at the time - a 3rd generation i5 CPU, 6GB RAM (which I later swapped for a 16GB kit) and - &lt;em&gt;gasp&lt;&#x2F;em&gt; -  all USB 3.0 ports. Unbelievable. I always wanted to have an always running home server I could rely on, and RPis wouldn&#x27;t cut it for my needs, so I asked her if I could keep it, claiming that it was in such a condition that only a trained computer whizkid like myself could ever find some use for it. So I took it apart, laid its components as the Manufacturer made them inside a medium-size Amazon cardboard box and put it on a shelf above my desk in my bedroom. I did that for better ventilation, I guess.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;the-problem&quot;&gt;The problem&lt;&#x2F;h2&gt;
+&lt;p&gt;It started happening give or take an year after I started using my sister&#x27;s ex-laptop as a home server. For some unknown reason, my server was suffering from what only could be described as &amp;quot;IO exhaustion&amp;quot;. After a while (usually 15 days, maybe less) since its last reboot, it got consistent, periodic CPU spikes on the &lt;em&gt;init&lt;&#x2F;em&gt; process (which is basically systemd on systemd-enabled systems). It slowed down to the point that sometimes I could barely SSH into it or even run sudo, and it could only be solved by a full reboot.&lt;&#x2F;p&gt;
+&lt;p&gt;On the first couple times I googled it I didn&#x27;t really find anything relevant for my case. Some suggested looking for CPU-hungry services, which there weren&#x27;t any. Other suggested something being afoot in &lt;code&gt;systemd-homed&lt;&#x2F;code&gt;, or some thingmabob I don&#x27;t remember in DBus - it was none of that. Shutting down my Windows VM didn&#x27;t solve it. syncthing was always running in the background and was a CPU hog whenever it was syncing, but it never stayed its welcome, so couldn&#x27;t be it. It had to be something in systemd itself causing the CPU spikes, because nothing under it in the process tree justified that atrocity. Whatever it was, it was spawning so fast I couldn&#x27;t catch it.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;the-investigation&quot;&gt;The investigation&lt;&#x2F;h2&gt;
+&lt;p&gt;So yesterday I started having the issue again, after 7 days of joyful computing. Less than usual! So there I go searching for answers once more, this time being a little bit more restrictive with the search terms. I known where the problem is - systemd. I know the symptoms - cpu spikes. So I typed in the almighty search box: &lt;code&gt;systemd spikes cpu&lt;&#x2F;code&gt;. Yeah, I thought about spikes first and then remembered that they&#x27;re specifically CPU-related, the order of the terms shouldn&#x27;t matter, right? &lt;strong&gt;Except they do&lt;&#x2F;strong&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;See, &lt;code&gt;systemd cpu spikes&lt;&#x2F;code&gt; yields a different set of results, of which the &lt;a href=&quot;https:&#x2F;&#x2F;bbs.archlinux.org&#x2F;viewtopic.php?id=278426&quot;&gt;Archlinux forum thread&lt;&#x2F;a&gt; that helped me figure out the issue appears but as a related thread from a top-level result, while with &lt;code&gt;systemd spikes cpu&lt;&#x2F;code&gt; it appears a top-level result. This may or may not be the case on your end, because I&#x27;m logged into my Google account and my cookie and geolocation data combined with the search terms created these results.&lt;&#x2F;p&gt;
+&lt;p&gt;The conclusion we can draw from that thread is that an unmounted SD card drive makes the device manager trigger happy with polling to the point it causes your system to slow down. Now, due to my house undergoing renovations recently, I had to move my server to my dad&#x27;s office and couldn&#x27;t easily test if plugging in an SD card did anything. But if the problem is in the drive I&#x2F;O itself, couldn&#x27;t I just like... &lt;em&gt;delete&lt;&#x2F;em&gt; it? It&#x27;s Linux, isn&#x27;t it? Everything is possible!&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;the-solution&quot;&gt;The solution&lt;&#x2F;h2&gt;
+&lt;p&gt;First we need to figure out which block device represents the SD card reader:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#191919;&quot;&gt;
+&lt;code&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;$ lsblk
+NAME   MAJ:MIN RM   SIZE RO TYPE MOUNTPOINTS
+sda      8:0    0 465,8G  0 disk
+├─sda1   8:1    0   976M  0 part &#x2F;efi
+├─sda2   8:2    0  11,2G  0 part
+└─sda3   8:3    0 453,7G  0 part &#x2F;
+sdb      8:16   0 931,5G  0 disk
+├─sdb1   8:17   0    64G  0 part
+└─sdb2   8:18   0 867,5G  0 part &#x2F;data
+sdc      8:32   1     0B  0 disk
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;code&gt;sda&lt;&#x2F;code&gt; is the primary drive the server runs on. &lt;code&gt;sdb&lt;&#x2F;code&gt; is an always connected external HDD serving as additional storage. But wait, I don&#x27;t have any other storage plugged in, and &lt;code&gt;0B&lt;&#x2F;code&gt; in size seems weird - so &lt;code&gt;sdc&lt;&#x2F;code&gt; is the sd card reader. It will only change in size and be mountable when there is an SD card inside. To double check, we can read &lt;code&gt;&#x2F;sys&#x2F;class&#x2F;block&#x2F;sdX&#x2F;device&#x2F;model&lt;&#x2F;code&gt; and look for something like &amp;quot;Card Reader&amp;quot; or &amp;quot;Generic Multi-Card&amp;quot;.&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#191919;&quot;&gt;
+&lt;code&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;$ cat &#x2F;sys&#x2F;class&#x2F;block&#x2F;sdc&#x2F;device&#x2F;model
+RTS5138 Card Reader Controller
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Bingo. To triple check, let&#x27;s read the I&#x2F;O error counter:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#191919;&quot;&gt;
+&lt;code&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;$ cat &#x2F;sys&#x2F;class&#x2F;block&#x2F;sdc&#x2F;device&#x2F;ioerr_cnt
+0x6660
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;26208 errors. Wow. Let&#x27;s put an end to this card reader&#x27;s misery by writing &lt;code&gt;1&lt;&#x2F;code&gt; to &lt;code&gt;&#x2F;sys&#x2F;class&#x2F;block&#x2F;sdX&#x2F;device&#x2F;delete&lt;&#x2F;code&gt;, which is an operation that needs priviledged access:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#191919;&quot;&gt;
+&lt;code&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;# echo 1 &amp;gt; &#x2F;sys&#x2F;class&#x2F;block&#x2F;sdc&#x2F;device&#x2F;delete
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;And that&#x27;s it. If you run &lt;code&gt;lsblk&lt;&#x2F;code&gt; again, the drive will no longer be there. As far as the kernel is concerned, it never existed. It takes a little while for the system to go back to normal, probably because there are still pending I&#x2F;O calls to be resolved.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;making-it-permanent&quot;&gt;Making it permanent&lt;&#x2F;h3&gt;
+&lt;p&gt;Perhaps, like me, you don&#x27;t really have an use for a card reader. And if the need ever arises, you could always use an external dongle. There are two ways you could make the change permanent:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Desolder the card reader from the motherboard and yeet it into oblivion&lt;&#x2F;li&gt;
+&lt;li&gt;Create a startup service that removes the card just like we did right now.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;Unless you desolder it, the card reader is going to be initialized again the next time you reboot, and you might forget to delete the drive. That approach is somewhat extreme, and even if I had the server on my bedroom I&#x27;d rather not risk losing what has become quite an essential part of my daily workflow.&lt;&#x2F;p&gt;
+&lt;p&gt;So let&#x27;s create a systemd startup service instead. To make sure we&#x27;ll always be deleting the correct device, since the only realiable assumption is that the primary drive is &lt;code&gt;sda&lt;&#x2F;code&gt;, we&#x27;re going to use the device&#x27;s physical location instead of its block node, which is &lt;a href=&quot;https:&#x2F;&#x2F;utcc.utoronto.ca&#x2F;%7Ecks&#x2F;space&#x2F;blog&#x2F;linux&#x2F;PCINamesNotStable&quot;&gt;not 100% reliable either&lt;&#x2F;a&gt;, but should be enough for us. Run this on a terminal:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#191919;&quot;&gt;
+&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span style=&quot;color:#80d500;&quot;&gt;for&lt;&#x2F;span&gt;&lt;span style=&quot;color:#cccccc;&quot;&gt; loc &lt;&#x2F;span&gt;&lt;span style=&quot;color:#80d500;&quot;&gt;in&lt;&#x2F;span&gt;&lt;span style=&quot;color:#cccccc;&quot;&gt; &#x2F;sys&#x2F;class&#x2F;scsi_device&#x2F;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;*; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#80d500;&quot;&gt;do
+    if &lt;&#x2F;span&gt;&lt;span style=&quot;color:#cccccc;&quot;&gt;cat &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffd700;&quot;&gt;&amp;quot;$loc&#x2F;device&#x2F;model&amp;quot; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;| &lt;&#x2F;span&gt;&lt;span style=&quot;color:#cccccc;&quot;&gt;grep&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8aa6c1;&quot;&gt; -Eqi &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffd700;&quot;&gt;&amp;quot;(card reader|multi-card)&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#80d500;&quot;&gt;then
+        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8aa6c1;&quot;&gt;echo &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffd700;&quot;&gt;&amp;quot;$(basename &amp;quot;$loc&amp;quot;)&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;;
+    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#80d500;&quot;&gt;fi
+done
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;It will return something like &lt;code&gt;X:X:X:X&lt;&#x2F;code&gt;, which for me was &lt;code&gt;7:0:0:0&lt;&#x2F;code&gt;. It goes without saying that you&#x27;re going to have to reboot to get the reader back if you already removed it, otherwise this won&#x27;t return anything.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;em&gt;Update 2023-01-07&lt;&#x2F;em&gt;: So, this week I finally got the server back in my bedroom, and up until now I hadn&#x27;t enabled the startup service yet because I wanted to see how it would look like after a reboot. Weirdly, &lt;code&gt;&#x2F;sys&#x2F;class&#x2F;block&#x2F;sdc&#x2F;device&#x2F;model&lt;&#x2F;code&gt; no longer reports &lt;code&gt;RTS5138 Card Reader Controller&lt;&#x2F;code&gt;, but &lt;code&gt;Generic Multi-Card&lt;&#x2F;code&gt; instead. Did me removing it along with whatever was causing its I&#x2F;O errors somehow erase the OEM info? The hardware location still is &lt;code&gt;7:0:0:0&lt;&#x2F;code&gt; though, so it&#x27;s not that big of deal.&lt;&#x2F;p&gt;
+&lt;p&gt;Now we create a file at &lt;code&gt;&#x2F;etc&#x2F;systemd&#x2F;system&#x2F;yeet-card-reader.service&lt;&#x2F;code&gt; (or whatever name you prefer) with the following contents:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#191919;&quot;&gt;
+&lt;code class=&quot;language-ini&quot; data-lang=&quot;ini&quot;&gt;&lt;span style=&quot;color:#80d500;&quot;&gt;[Unit]
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8aa6c1;&quot;&gt;Description&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#cccccc;&quot;&gt;Yeet the card reader
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8aa6c1;&quot;&gt;After&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#cccccc;&quot;&gt;local&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;-&lt;&#x2F;span&gt;&lt;span style=&quot;color:#cccccc;&quot;&gt;fs&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#cccccc;&quot;&gt;target
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8aa6c1;&quot;&gt;Wants&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#cccccc;&quot;&gt;local&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;-&lt;&#x2F;span&gt;&lt;span style=&quot;color:#cccccc;&quot;&gt;fs&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#cccccc;&quot;&gt;target
+
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#80d500;&quot;&gt;[Service]
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8aa6c1;&quot;&gt;ExecStart&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;=&#x2F;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#cccccc;&quot;&gt;usr&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;&#x2F;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#cccccc;&quot;&gt;local&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;&#x2F;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#cccccc;&quot;&gt;bin&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;&#x2F;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#cccccc;&quot;&gt;yeet&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;-&lt;&#x2F;span&gt;&lt;span style=&quot;color:#cccccc;&quot;&gt;card&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;-&lt;&#x2F;span&gt;&lt;span style=&quot;color:#cccccc;&quot;&gt;reader
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8aa6c1;&quot;&gt;Type&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#cccccc;&quot;&gt;oneshot
+
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#80d500;&quot;&gt;[Install]
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8aa6c1;&quot;&gt;WantedBy&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#cccccc;&quot;&gt;multi&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;-&lt;&#x2F;span&gt;&lt;span style=&quot;color:#cccccc;&quot;&gt;user&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#cccccc;&quot;&gt;target
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;That&#x27;s the service unit, but we also need to create the script that&#x27;s actually going to the the job. Create another file at &lt;code&gt;&#x2F;usr&#x2F;local&#x2F;bin&#x2F;yeet-card-reader&lt;&#x2F;code&gt; with the following contents:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#191919;&quot;&gt;
+&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span style=&quot;background-color:#171717;color:#616161;&quot;&gt;#!&#x2F;bin&#x2F;bash
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#cccccc;&quot;&gt;
+loc&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffd700;&quot;&gt;&amp;quot;7:0:0:0&amp;quot; &lt;&#x2F;span&gt;&lt;span style=&quot;background-color:#171717;color:#616161;&quot;&gt;# change this to your reader&amp;#39;s location
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#cccccc;&quot;&gt;dev_path&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffd700;&quot;&gt;&amp;quot;&#x2F;sys&#x2F;class&#x2F;scsi_device&#x2F;$loc&#x2F;device&amp;quot;
+
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#80d500;&quot;&gt;if &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8aa6c1;&quot;&gt;[[ &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;! &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8aa6c1;&quot;&gt;-d &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffd700;&quot;&gt;&amp;quot;$dev_path&amp;quot; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8aa6c1;&quot;&gt;]]&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#80d500;&quot;&gt;then
+    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8aa6c1;&quot;&gt;echo &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffd700;&quot;&gt;&amp;quot;error: Couldn&amp;#39;t find device at $loc&amp;quot; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;&amp;gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#eddd5a;&quot;&gt;2
+    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8aa6c1;&quot;&gt;exit&lt;&#x2F;span&gt;&lt;span style=&quot;color:#cccccc;&quot;&gt; 1
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#80d500;&quot;&gt;fi
+
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#cccccc;&quot;&gt;name&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffd700;&quot;&gt;&amp;quot;$(cat $dev_path&#x2F;model)&amp;quot;
+
+&lt;&#x2F;span&gt;&lt;span style=&quot;background-color:#171717;color:#616161;&quot;&gt;# sanity check
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#80d500;&quot;&gt;if &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;! &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8aa6c1;&quot;&gt;echo &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffd700;&quot;&gt;&amp;quot;$name&amp;quot; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;| &lt;&#x2F;span&gt;&lt;span style=&quot;color:#cccccc;&quot;&gt;grep&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8aa6c1;&quot;&gt; -Eqi &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffd700;&quot;&gt;&amp;quot;(card reader|multi-card)&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#80d500;&quot;&gt;then
+    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8aa6c1;&quot;&gt;echo &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffd700;&quot;&gt;&amp;quot;error: Device is not a card reader&amp;quot; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;&amp;gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#eddd5a;&quot;&gt;2
+    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8aa6c1;&quot;&gt;exit&lt;&#x2F;span&gt;&lt;span style=&quot;color:#cccccc;&quot;&gt; 1
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#80d500;&quot;&gt;fi
+
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8aa6c1;&quot;&gt;echo&lt;&#x2F;span&gt;&lt;span style=&quot;color:#cccccc;&quot;&gt; 1 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;&amp;gt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffd700;&quot;&gt;&amp;quot;$dev_path&#x2F;delete&amp;quot;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8aa6c1;&quot;&gt;echo &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffd700;&quot;&gt;&amp;quot;Removed $name&amp;quot;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Remember to mark it as executable. Finally, we reload systemd and enable the service:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#191919;&quot;&gt;
+&lt;code&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;# systemctl daemon-reload
+# systemctl enable yeet-card-reader
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Done! Now you can relax knowing that (hopefully) you never get weird CPU spikes again. And if you do, it might be something more reasonable like a badly optimized program.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;&#x2F;h2&gt;
+&lt;p&gt;I&#x27;m not sure if this is something that happens with every card reader, or even other forms of storage with removable media. Could this happen with DVD drives, for example? Or (external) USB card reader dongles? Does this also happen on other OSes? I don&#x27;t know, but I hope this post helped. You can &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;manokara&#x2F;manokara.github.io&#x2F;issues&quot;&gt;open an issue&lt;&#x2F;a&gt; at the blog&#x27;s repo if you have any questions or remarks. See ya!&lt;&#x2F;p&gt;
+</content>
+	</entry>
+</feed>

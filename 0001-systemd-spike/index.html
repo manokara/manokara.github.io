@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <title>Builtin SD card readers (on Linux) are evil, I think - manokara&#x27;s den</title>
+    
+    
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <meta name="description" content="Welcome to my underground lair"/>
+
+    <meta property="og:title" content="Builtin SD card readers (on Linux) are evil, I think&nbsp;- manokara&#x27;s den
+" />
+    <meta property="og:type" content="website"/>
+    <meta property="og:url" content="https:&#x2F;&#x2F;manokara.github.io&#x2F;0001-systemd-spike&#x2F;"/>
+    <meta property="og:description" content="Are you having weird CPU spikes on your Linux laptop for seemingly no reason? It might be your SD card reader! No, really."/>
+    <link rel="preload" href="/assets/fonts/FiraCode-Regular.woff" as="font" type="font/woff" crossorigin>
+    <link rel="preload" href="/assets/fonts/FiraCode-Bold.woff" as="font" type="font/woff" crossorigin>
+
+    <link rel="stylesheet" href="https:&#x2F;&#x2F;manokara.github.io&#x2F;style.css">
+    <link rel="stylesheet" href="https:&#x2F;&#x2F;manokara.github.io&#x2F;color&#x2F;red.css">
+</head>
+    <body>
+        <div class="container center">
+<header class="header">
+    <div class="header__inner">
+        <div class="header__logo">
+            <a href="&#x2F;">
+    <div class="logo">
+        manokara&#x27;s den
+    </div>
+</a>
+        </div>
+        <div class="menu-trigger">menu</div>
+    </div>
+    </header>
+<div class="content"><div class="post">
+        <h1 class="post-title">
+            <a href="https:&#x2F;&#x2F;manokara.github.io&#x2F;0001-systemd-spike&#x2F;">Builtin SD card readers (on Linux) are evil, I think</a>
+        </h1>
+        
+    <div class="post-meta">
+        <span class="post-date">2022.12.01
+                [Updated: 2023.01.07]
+                </span>
+
+        <span class="post-author"></span>
+
+        
+
+    
+    :: {<a href="https:&#x2F;&#x2F;manokara.github.io&#x2F;categories&#x2F;tech-support&#x2F;">tech support</a>} 
+
+            
+    ::
+    #<a href="https:&#x2F;&#x2F;manokara.github.io&#x2F;tags&#x2F;linux&#x2F;">linux</a>
+        
+    
+            
+        
+    </div>
+
+
+
+        
+
+        <div class="post-content">
+            <p>I've been wondering what my first real blog post could ever be. Something technical, a rant, maybe both? I've had my GH pages blog up for a while with a Hello World, and yesterday after solving an issue I've been struggling with for a while on one of my Linux machines, decided it was the time to put some life into the den. This issue in particular is quite unintuitive if you don't know what to look for, so I thought writing about it could help other people with the same problem.</p>
+<h2 id="a-little-backstory">A little backstory</h2>
+<p>My sister had an ASUS laptop gathering dust in a corner, because its keyboard was broken, among other things, but overall it was in very good condition, as well as having a pretty decent spec for its price tag at the time - a 3rd generation i5 CPU, 6GB RAM (which I later swapped for a 16GB kit) and - <em>gasp</em> -  all USB 3.0 ports. Unbelievable. I always wanted to have an always running home server I could rely on, and RPis wouldn't cut it for my needs, so I asked her if I could keep it, claiming that it was in such a condition that only a trained computer whizkid like myself could ever find some use for it. So I took it apart, laid its components as the Manufacturer made them inside a medium-size Amazon cardboard box and put it on a shelf above my desk in my bedroom. I did that for better ventilation, I guess.</p>
+<h2 id="the-problem">The problem</h2>
+<p>It started happening give or take an year after I started using my sister's ex-laptop as a home server. For some unknown reason, my server was suffering from what only could be described as &quot;IO exhaustion&quot;. After a while (usually 15 days, maybe less) since its last reboot, it got consistent, periodic CPU spikes on the <em>init</em> process (which is basically systemd on systemd-enabled systems). It slowed down to the point that sometimes I could barely SSH into it or even run sudo, and it could only be solved by a full reboot.</p>
+<p>On the first couple times I googled it I didn't really find anything relevant for my case. Some suggested looking for CPU-hungry services, which there weren't any. Other suggested something being afoot in <code>systemd-homed</code>, or some thingmabob I don't remember in DBus - it was none of that. Shutting down my Windows VM didn't solve it. syncthing was always running in the background and was a CPU hog whenever it was syncing, but it never stayed its welcome, so couldn't be it. It had to be something in systemd itself causing the CPU spikes, because nothing under it in the process tree justified that atrocity. Whatever it was, it was spawning so fast I couldn't catch it.</p>
+<h2 id="the-investigation">The investigation</h2>
+<p>So yesterday I started having the issue again, after 7 days of joyful computing. Less than usual! So there I go searching for answers once more, this time being a little bit more restrictive with the search terms. I known where the problem is - systemd. I know the symptoms - cpu spikes. So I typed in the almighty search box: <code>systemd spikes cpu</code>. Yeah, I thought about spikes first and then remembered that they're specifically CPU-related, the order of the terms shouldn't matter, right? <strong>Except they do</strong>.</p>
+<p>See, <code>systemd cpu spikes</code> yields a different set of results, of which the <a href="https://bbs.archlinux.org/viewtopic.php?id=278426">Archlinux forum thread</a> that helped me figure out the issue appears but as a related thread from a top-level result, while with <code>systemd spikes cpu</code> it appears a top-level result. This may or may not be the case on your end, because I'm logged into my Google account and my cookie and geolocation data combined with the search terms created these results.</p>
+<p>The conclusion we can draw from that thread is that an unmounted SD card drive makes the device manager trigger happy with polling to the point it causes your system to slow down. Now, due to my house undergoing renovations recently, I had to move my server to my dad's office and couldn't easily test if plugging in an SD card did anything. But if the problem is in the drive I/O itself, couldn't I just like... <em>delete</em> it? It's Linux, isn't it? Everything is possible!</p>
+<h2 id="the-solution">The solution</h2>
+<p>First we need to figure out which block device represents the SD card reader:</p>
+<pre style="background-color:#191919;">
+<code><span style="color:#ffffff;">$ lsblk
+NAME   MAJ:MIN RM   SIZE RO TYPE MOUNTPOINTS
+sda      8:0    0 465,8G  0 disk
+├─sda1   8:1    0   976M  0 part /efi
+├─sda2   8:2    0  11,2G  0 part
+└─sda3   8:3    0 453,7G  0 part /
+sdb      8:16   0 931,5G  0 disk
+├─sdb1   8:17   0    64G  0 part
+└─sdb2   8:18   0 867,5G  0 part /data
+sdc      8:32   1     0B  0 disk
+</span></code></pre>
+<p><code>sda</code> is the primary drive the server runs on. <code>sdb</code> is an always connected external HDD serving as additional storage. But wait, I don't have any other storage plugged in, and <code>0B</code> in size seems weird - so <code>sdc</code> is the sd card reader. It will only change in size and be mountable when there is an SD card inside. To double check, we can read <code>/sys/class/block/sdX/device/model</code> and look for something like &quot;Card Reader&quot; or &quot;Generic Multi-Card&quot;.</p>
+<pre style="background-color:#191919;">
+<code><span style="color:#ffffff;">$ cat /sys/class/block/sdc/device/model
+RTS5138 Card Reader Controller
+</span></code></pre>
+<p>Bingo. To triple check, let's read the I/O error counter:</p>
+<pre style="background-color:#191919;">
+<code><span style="color:#ffffff;">$ cat /sys/class/block/sdc/device/ioerr_cnt
+0x6660
+</span></code></pre>
+<p>26208 errors. Wow. Let's put an end to this card reader's misery by writing <code>1</code> to <code>/sys/class/block/sdX/device/delete</code>, which is an operation that needs priviledged access:</p>
+<pre style="background-color:#191919;">
+<code><span style="color:#ffffff;"># echo 1 &gt; /sys/class/block/sdc/device/delete
+</span></code></pre>
+<p>And that's it. If you run <code>lsblk</code> again, the drive will no longer be there. As far as the kernel is concerned, it never existed. It takes a little while for the system to go back to normal, probably because there are still pending I/O calls to be resolved.</p>
+<h3 id="making-it-permanent">Making it permanent</h3>
+<p>Perhaps, like me, you don't really have an use for a card reader. And if the need ever arises, you could always use an external dongle. There are two ways you could make the change permanent:</p>
+<ul>
+<li>Desolder the card reader from the motherboard and yeet it into oblivion</li>
+<li>Create a startup service that removes the card just like we did right now.</li>
+</ul>
+<p>Unless you desolder it, the card reader is going to be initialized again the next time you reboot, and you might forget to delete the drive. That approach is somewhat extreme, and even if I had the server on my bedroom I'd rather not risk losing what has become quite an essential part of my daily workflow.</p>
+<p>So let's create a systemd startup service instead. To make sure we'll always be deleting the correct device, since the only realiable assumption is that the primary drive is <code>sda</code>, we're going to use the device's physical location instead of its block node, which is <a href="https://utcc.utoronto.ca/%7Ecks/space/blog/linux/PCINamesNotStable">not 100% reliable either</a>, but should be enough for us. Run this on a terminal:</p>
+<pre style="background-color:#191919;">
+<code class="language-sh" data-lang="sh"><span style="color:#80d500;">for</span><span style="color:#cccccc;"> loc </span><span style="color:#80d500;">in</span><span style="color:#cccccc;"> /sys/class/scsi_device/</span><span style="color:#ffffff;">*; </span><span style="color:#80d500;">do
+    if </span><span style="color:#cccccc;">cat </span><span style="color:#ffd700;">&quot;$loc/device/model&quot; </span><span style="color:#ffffff;">| </span><span style="color:#cccccc;">grep</span><span style="font-style:italic;color:#8aa6c1;"> -Eqi </span><span style="color:#ffd700;">&quot;(card reader|multi-card)&quot;</span><span style="color:#ffffff;">; </span><span style="color:#80d500;">then
+        </span><span style="color:#8aa6c1;">echo </span><span style="color:#ffd700;">&quot;$(basename &quot;$loc&quot;)&quot;</span><span style="color:#ffffff;">;
+    </span><span style="color:#80d500;">fi
+done
+</span></code></pre>
+<p>It will return something like <code>X:X:X:X</code>, which for me was <code>7:0:0:0</code>. It goes without saying that you're going to have to reboot to get the reader back if you already removed it, otherwise this won't return anything.</p>
+<p><em>Update 2023-01-07</em>: So, this week I finally got the server back in my bedroom, and up until now I hadn't enabled the startup service yet because I wanted to see how it would look like after a reboot. Weirdly, <code>/sys/class/block/sdc/device/model</code> no longer reports <code>RTS5138 Card Reader Controller</code>, but <code>Generic Multi-Card</code> instead. Did me removing it along with whatever was causing its I/O errors somehow erase the OEM info? The hardware location still is <code>7:0:0:0</code> though, so it's not that big of deal.</p>
+<p>Now we create a file at <code>/etc/systemd/system/yeet-card-reader.service</code> (or whatever name you prefer) with the following contents:</p>
+<pre style="background-color:#191919;">
+<code class="language-ini" data-lang="ini"><span style="color:#80d500;">[Unit]
+</span><span style="font-style:italic;color:#8aa6c1;">Description</span><span style="color:#ffffff;">=</span><span style="color:#cccccc;">Yeet the card reader
+</span><span style="font-style:italic;color:#8aa6c1;">After</span><span style="color:#ffffff;">=</span><span style="color:#cccccc;">local</span><span style="color:#ffffff;">-</span><span style="color:#cccccc;">fs</span><span style="color:#ffffff;">.</span><span style="color:#cccccc;">target
+</span><span style="font-style:italic;color:#8aa6c1;">Wants</span><span style="color:#ffffff;">=</span><span style="color:#cccccc;">local</span><span style="color:#ffffff;">-</span><span style="color:#cccccc;">fs</span><span style="color:#ffffff;">.</span><span style="color:#cccccc;">target
+
+</span><span style="color:#80d500;">[Service]
+</span><span style="font-style:italic;color:#8aa6c1;">ExecStart</span><span style="color:#ffffff;">=/</span><span style="color:#cccccc;">usr</span><span style="color:#ffffff;">/</span><span style="color:#cccccc;">local</span><span style="color:#ffffff;">/</span><span style="color:#cccccc;">bin</span><span style="color:#ffffff;">/</span><span style="color:#cccccc;">yeet</span><span style="color:#ffffff;">-</span><span style="color:#cccccc;">card</span><span style="color:#ffffff;">-</span><span style="color:#cccccc;">reader
+</span><span style="font-style:italic;color:#8aa6c1;">Type</span><span style="color:#ffffff;">=</span><span style="color:#cccccc;">oneshot
+
+</span><span style="color:#80d500;">[Install]
+</span><span style="font-style:italic;color:#8aa6c1;">WantedBy</span><span style="color:#ffffff;">=</span><span style="color:#cccccc;">multi</span><span style="color:#ffffff;">-</span><span style="color:#cccccc;">user</span><span style="color:#ffffff;">.</span><span style="color:#cccccc;">target
+</span></code></pre>
+<p>That's the service unit, but we also need to create the script that's actually going to the the job. Create another file at <code>/usr/local/bin/yeet-card-reader</code> with the following contents:</p>
+<pre style="background-color:#191919;">
+<code class="language-sh" data-lang="sh"><span style="background-color:#171717;color:#616161;">#!/bin/bash
+</span><span style="color:#cccccc;">
+loc</span><span style="color:#ffffff;">=</span><span style="color:#ffd700;">&quot;7:0:0:0&quot; </span><span style="background-color:#171717;color:#616161;"># change this to your reader&#39;s location
+</span><span style="color:#cccccc;">dev_path</span><span style="color:#ffffff;">=</span><span style="color:#ffd700;">&quot;/sys/class/scsi_device/$loc/device&quot;
+
+</span><span style="color:#80d500;">if </span><span style="color:#8aa6c1;">[[ </span><span style="color:#ffffff;">! </span><span style="font-style:italic;color:#8aa6c1;">-d </span><span style="color:#ffd700;">&quot;$dev_path&quot; </span><span style="color:#8aa6c1;">]]</span><span style="color:#ffffff;">; </span><span style="color:#80d500;">then
+    </span><span style="color:#8aa6c1;">echo </span><span style="color:#ffd700;">&quot;error: Couldn&#39;t find device at $loc&quot; </span><span style="color:#ffffff;">&gt;&amp;</span><span style="color:#eddd5a;">2
+    </span><span style="color:#8aa6c1;">exit</span><span style="color:#cccccc;"> 1
+</span><span style="color:#80d500;">fi
+
+</span><span style="color:#cccccc;">name</span><span style="color:#ffffff;">=</span><span style="color:#ffd700;">&quot;$(cat $dev_path/model)&quot;
+
+</span><span style="background-color:#171717;color:#616161;"># sanity check
+</span><span style="color:#80d500;">if </span><span style="color:#ffffff;">! </span><span style="color:#8aa6c1;">echo </span><span style="color:#ffd700;">&quot;$name&quot; </span><span style="color:#ffffff;">| </span><span style="color:#cccccc;">grep</span><span style="font-style:italic;color:#8aa6c1;"> -Eqi </span><span style="color:#ffd700;">&quot;(card reader|multi-card)&quot;</span><span style="color:#ffffff;">; </span><span style="color:#80d500;">then
+    </span><span style="color:#8aa6c1;">echo </span><span style="color:#ffd700;">&quot;error: Device is not a card reader&quot; </span><span style="color:#ffffff;">&gt;&amp;</span><span style="color:#eddd5a;">2
+    </span><span style="color:#8aa6c1;">exit</span><span style="color:#cccccc;"> 1
+</span><span style="color:#80d500;">fi
+
+</span><span style="color:#8aa6c1;">echo</span><span style="color:#cccccc;"> 1 </span><span style="color:#ffffff;">&gt; </span><span style="color:#ffd700;">&quot;$dev_path/delete&quot;
+</span><span style="color:#8aa6c1;">echo </span><span style="color:#ffd700;">&quot;Removed $name&quot;
+</span></code></pre>
+<p>Remember to mark it as executable. Finally, we reload systemd and enable the service:</p>
+<pre style="background-color:#191919;">
+<code><span style="color:#ffffff;"># systemctl daemon-reload
+# systemctl enable yeet-card-reader
+</span></code></pre>
+<p>Done! Now you can relax knowing that (hopefully) you never get weird CPU spikes again. And if you do, it might be something more reasonable like a badly optimized program.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>I'm not sure if this is something that happens with every card reader, or even other forms of storage with removable media. Could this happen with DVD drives, for example? Or (external) USB card reader dongles? Does this also happen on other OSes? I don't know, but I hope this post helped. You can <a href="https://github.com/manokara/manokara.github.io/issues">open an issue</a> at the blog's repo if you have any questions or remarks. See ya!</p>
+
+        </div>
+        
+    
+</div></div>
+            
+    <div class="pagination">
+        <div class="pagination__buttons">
+            </div>
+    </div>
+<footer class="footer">
+                    <div class="footer__inner"><div class="copyright copyright--user">© 2022 manokara</div>
+    <script type="text/javascript" src="https:&#x2F;&#x2F;manokara.github.io&#x2F;assets&#x2F;js&#x2F;main.js"></script>
+</div>
+                    
+
+                </footer></div>
+    </body>
+</html>

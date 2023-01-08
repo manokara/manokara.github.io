@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://manokara.github.io/sitemap.xml

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+        <loc>https://manokara.github.io/</loc>
+    </url>
+    <url>
+        <loc>https://manokara.github.io/0001-systemd-spike/</loc>
+        <lastmod>2023-01-07</lastmod>
+    </url>
+    <url>
+        <loc>https://manokara.github.io/0002-zerotier-windows81/</loc>
+        <lastmod>2022-12-16</lastmod>
+    </url>
+    <url>
+        <loc>https://manokara.github.io/categories/</loc>
+    </url>
+    <url>
+        <loc>https://manokara.github.io/categories/tech-support/</loc>
+    </url>
+    <url>
+        <loc>https://manokara.github.io/categories/tech-support/page/1/</loc>
+    </url>
+    <url>
+        <loc>https://manokara.github.io/page/1/</loc>
+    </url>
+    <url>
+        <loc>https://manokara.github.io/tags/</loc>
+    </url>
+    <url>
+        <loc>https://manokara.github.io/tags/linux/</loc>
+    </url>
+    <url>
+        <loc>https://manokara.github.io/tags/windows/</loc>
+    </url>
+</urlset>
