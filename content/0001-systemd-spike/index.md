@@ -2,6 +2,11 @@
 title = "Builtin SD card readers (on Linux) are evil, I think"
 description = "Are you having weird CPU spikes on your Linux laptop for seemingly no reason? It might be your SD card reader! No, really."
 date = 2022-12-01
+updated = 2023-01-07
+
+[taxonomies]
+categories = ["tech support"]
+tags = ["linux"]
 +++
 
 I've been wondering what my first real blog post could ever be. Something technical, a rant, maybe both? I've had my GH pages blog up for a while with a Hello World, and yesterday after solving an issue I've been struggling with for a while on one of my Linux machines, decided it was the time to put some life into the den. This issue in particular is quite unintuitive if you don't know what to look for, so I thought writing about it could help other people with the same problem.
@@ -41,14 +46,21 @@ sdb      8:16   0 931,5G  0 disk
 sdc      8:32   1     0B  0 disk
 ```
 
-`sda` is the primary drive the server runs on. `sdb` is an always connected external HDD serving as additional storage. But wait, I don't have any other storage plugged in, and `0B` in size seems weird - so `sdc` is the sd card reader. It will only change in size and be mountable when there is an SD card inside. To double check, we can read `/sys/class/block/sdX/device/model` and look for something like "Card Reader" in it.
+`sda` is the primary drive the server runs on. `sdb` is an always connected external HDD serving as additional storage. But wait, I don't have any other storage plugged in, and `0B` in size seems weird - so `sdc` is the sd card reader. It will only change in size and be mountable when there is an SD card inside. To double check, we can read `/sys/class/block/sdX/device/model` and look for something like "Card Reader" or "Generic Multi-Card".
 
 ```
 $ cat /sys/class/block/sdc/device/model
 RTS5138 Card Reader Controller
 ```
 
-Bingo. Now all we have to do is to tell the kernel to get rid of it by writing `1` to `/sys/class/block/sdX/device/delete`, which is an operation that needs priviledged access:
+Bingo. To triple check, let's read the I/O error counter:
+
+```
+$ cat /sys/class/block/sdc/device/ioerr_cnt
+0x6660
+```
+
+26208 errors. Wow. Let's put an end to this card reader's misery by writing `1` to `/sys/class/block/sdX/device/delete`, which is an operation that needs priviledged access:
 
 ```
 # echo 1 > /sys/class/block/sdc/device/delete
@@ -69,13 +81,15 @@ So let's create a systemd startup service instead. To make sure we'll always be 
 
 ```sh
 for loc in /sys/class/scsi_device/*; do
-    if cat "$loc/device/model" | grep -qi "card reader"; then
+    if cat "$loc/device/model" | grep -Eqi "(card reader|multi-card)"; then
         echo "$(basename "$loc")";
     fi
 done
 ```
 
 It will return something like `X:X:X:X`, which for me was `7:0:0:0`. It goes without saying that you're going to have to reboot to get the reader back if you already removed it, otherwise this won't return anything.
+
+*Update 2023-01-07*: So, this week I finally got the server back in my bedroom, and up until now I hadn't enabled the startup service yet because I wanted to see how it would look like after a reboot. Weirdly, `/sys/class/block/sdc/device/model` no longer reports `RTS5138 Card Reader Controller`, but `Generic Multi-Card` instead. Did me removing it along with whatever was causing its I/O errors somehow erase the OEM info? The hardware location still is `7:0:0:0` though, so it's not that big of deal.
 
 Now we create a file at `/etc/systemd/system/yeet-card-reader.service` (or whatever name you prefer) with the following contents:
 
@@ -109,7 +123,7 @@ fi
 name="$(cat $dev_path/model)"
 
 # sanity check
-if ! echo "$name" | grep -qi "card reader"; then
+if ! echo "$name" | grep -Eqi "(card reader|multi-card)"; then
     echo "error: Device is not a card reader" >&2
     exit 1
 fi
@@ -130,3 +144,4 @@ Done! Now you can relax knowing that (hopefully) you never get weird CPU spikes 
 ## Conclusion
 
 I'm not sure if this is something that happens with every card reader, or even other forms of storage with removable media. Could this happen with DVD drives, for example? Or (external) USB card reader dongles? Does this also happen on other OSes? I don't know, but I hope this post helped. You can [open an issue](https://github.com/manokara/manokara.github.io/issues) at the blog's repo if you have any questions or remarks. See ya!
+

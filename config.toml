@@ -4,6 +4,12 @@ base_url = "https://manokara.github.io"
 theme = "zerm"
 compile_sass = true
 build_search_index = true
+sort_by = "slug"
+
+taxonomies = [
+    { name = "tags" },
+    { name = "categories", feed = true, paginate_by = 10 },
+]
 
 [markdown]
 # Whether to do syntax highlighting
@@ -74,3 +80,4 @@ read_more = "read more"
 # not currently used from previous theme, but leaving here for now in case I
 # feel like adding it.
 read_other_posts = "read other posts"
+

@@ -2,6 +2,10 @@
 title = "How to fix ZeroTier not working on Windows 8.1"
 description = "All in 8 easy steps! If you can't access anyone and there are no virtual network tunnel adapters, this post is for you."
 date = 2022-12-16
+
+[taxonomies]
+categories = ["tech support"]
+tags = ["windows"]
 +++
 
 Today I wanted to install ZeroTier on a machine at work, which runs Windows 8.1, so I could securely copy some files over the weekend from home. So, I went to ZeroTier's website and downloaded the latest version, 1.10.2, as one would, and installed it. Installation went on without a hitch. Or so I thought...
@@ -28,3 +32,4 @@ After installing 1.6.6, you should see ZeroTier's virtual network adapters in th
 While I did join a network right after installing 1.6.6, I could join another one just fine after updating to 1.10.2 and was able to connect to other nodes in the network. I'm not sure if that was fixed in 1.10.2 or OP didn't check if they could.
 
 I think that's it. See ya! o/
+
